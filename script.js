@@ -29,12 +29,12 @@ function renderCryptoTable(data) {
     data.forEach(crypto => {
         const row = `
         <tr>
-          <td><img src="${crypto.image}" alt="${crypto.name}" class="logo"></td>
+          <td><img src="${crypto.image}" alt="${crypto.name}" class="logo"> ${crypto.name}</td>
           <td>${crypto.name}</td>
           <td>${crypto.symbol.toUpperCase()}</td>
           <td>$${crypto.current_price}</td>
           <td>${crypto.total_volume}</td>
-          <td>${crypto.price_change_percentage_24h}%</td>
+          <td>${crypto.price_change_percentage_24h.toFixed(2)}%</td>
           <td>Mkt cap:${crypto.market_cap}</td>
         </tr>
       `;
