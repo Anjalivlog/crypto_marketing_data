@@ -1,23 +1,32 @@
 console.log("hello");
 let data;
 
-fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false')
-  .then(response => response.json())
-  .then(data => {
-    renderCryptoTable(data);
-  })
-  .catch(error => console.error('Error fetching data:', error));
+// fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false')
+//   .then(response => response.json())
+//   .then(data => {
+//     renderCryptoTable(data);
+//   })
+//   .catch(error => console.error('Error fetching data:', error));
 
 async function fetchData() {
     try {
-      const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false');
-      console.log(response);
-      data = await response.json();
+      const responseData = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false');
+      console.log(responseData);
+      if(!responseData.ok) {
+        throw new Error("Network response was not ok");
+      }
+      data = await responseData.json();
       console.log(data);
 
       renderCryptoTable(data);
     } catch (error) {
-      console.error('Error fetching data:', error);
+        if(error.response && error.response.status === 429) {
+            console.log("Rate limit exceeded. Waiting before retrying");
+            setTimeout(fetchData, 60000);
+        } else {
+            console.error("Error fetching data:" , error);
+            setTimeout(fetchData, 60000);
+        }
     }
   }
 
